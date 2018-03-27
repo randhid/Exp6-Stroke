@@ -6,7 +6,7 @@ function [locs, mags, changes] = JointAnglePeaksOverground (Subject_List)
 res = [];
 
 for i = 1:length(Subject_List)
-     parentfolderavg = SelectFolder('clx_average', Subject_List(i) );
+     parentfolderavg = SelectFolder('clx_average_1min', char ( Subject_List(i) ) );
      [resi] = FindSbjPeaks(parentfolderavg);
      res= [res, resi];
 end
@@ -14,118 +14,139 @@ end
 %% Extracting peak times and magnitudes
 
 for i = 1 : length(res)
-    peaks_knee_ogA(i) = res(i).knee.ogpeaksA(end);
-    locs_knee_ogA(i) = res(i).knee.oglocsA(end);
-    peaks_knee_ogP(i) = res(i).knee.ogpeaksP(end);
-    locs_knee_ogP(i) = res(i).knee.oglocsP(end);
+    peaks_kneeP(i) = res(i).knee.Ppeaks(end);
+    locs_kneeP(i) = res(i).knee.Plocs(end);
+    peaks_kneeA(i) = res(i).knee.Apeaks(end);
+    locs_kneeA(i) = res(i).knee.Alocs(end);
+    peaks_kneepostA = res(i).knee.postApeaks;
+    locs_kneepostA = res(i).knee.postAlocs;
+    peaks_kneepostB = res(i).knee.postBpeaks;
+    locs_kneepostB = res(i).knee.postBlocs;
+    peaks_kneepostC = res(i).knee.postCpeaks;
+    locs_kneepostC = res(i).knee.postClocs;
 end 
 
 for i = 1 : length(res)
-    peaks_knee_tmA(i) = res(i).knee.tmpeaksA(end);
-    locs_knee_tmA(i) = res(i).knee.tmlocsA(end);
-    peaks_knee_tmP(i) = res(i).knee.tmpeaksP(end);
-    locs_knee_tmP(i) = res(i).knee.tmlocsP(end);
-end 
-
-
-for i = 1 : length(res)
-    peaks_hip_ogA(i) = res(i).hip.ogpeaksA(end);
-    locs_hip_ogA(i) = res(i).hip.oglocsA(end);
-    peaks_hip_ogP(i) = res(i).hip.ogpeaksP(end);
-    locs_hip_ogP(i) = res(i).hip.oglocsP(end);
-end 
-
-for i = 1 : length(res)
-    peaks_hip_tmA(i) = res(i).hip.tmpeaksA(end);
-    locs_hip_tmA(i) = res(i).hip.tmlocsA(end);
-    peaks_hip_tmP(i) = res(i).hip.tmpeaksP(end);
-    locs_hip_tmP(i) = res(i).hip.tmlocsP(end);
+    peaks_hipP(i) = res(i).hip.Ppeaks(end);
+    locs_hipP(i) = res(i).hip.Plocs(end);
+    peaks_hipA(i) = res(i).hip.Apeaks(end);
+    locs_hipA(i) = res(i).hip.Alocs(end);
+    peaks_hippostA = res(i).hip.postApeaks;
+    locs_hippostA = res(i).hip.postAlocs;
+    peaks_hippostB = res(i).hip.postBpeaks;
+    locs_hippostB = res(i).hip.postBlocs;
+    peaks_hippostC = res(i).hip.postCpeaks;
+    locs_hippostC = res(i).hip.postClocs;
 end 
 
 %%
 figure
-subplot(221), hold on
-plot(locs_knee_ogA, peaks_knee_ogA, '.r')
-plot(locs_knee_ogP, peaks_knee_ogP, '.b')
-legend('Active', 'Passive', 'Location', 'northeast'), title('OG Knee')
+subplot(211), hold on
+plot(locs_kneeP, peaks_kneeP, '.r')
+plot(locs_kneeA, peaks_kneeA, '.b')
+plot(locs_kneepostA, peaks_kneepostA, '.g')
+plot(locs_kneepostB, peaks_kneepostB, '.m')
+plot(locs_kneepostC, peaks_kneepostC, '.k')
+legend('Baseline', 'Training', 'PostA', 'PostB', 'PostC', ...
+    'Location', 'northeast')
+title('Knee Flexion')
 
-subplot(222), hold on
-plot(locs_hip_ogA, peaks_hip_ogA, '.r')
-plot(locs_hip_ogP, peaks_hip_ogP, '.b')
-title('OG Hip')
+subplot(212), hold on
+plot(locs_hipP, peaks_hipP, '.r')
+plot(locs_hipA, peaks_hipA, '.b')
+plot(locs_hippostA, peaks_hippostA, '.g')
+plot(locs_hippostB, peaks_hippostB, '.m')
+plot(locs_hippostC, peaks_hippostC, '.k')
+title('Hip Flexion')
 
-subplot(223), hold on
-plot(locs_knee_tmA, peaks_knee_tmA, '.r')
-plot(locs_knee_tmP, peaks_knee_tmP, '.b')
-title('TM Knee')
-
-subplot(224), hold on
-plot(locs_hip_tmA, peaks_hip_tmA, '.r')
-plot(locs_hip_tmP, peaks_hip_tmP, '.b')
-title('TM Hip')
 
 
 %% Knee and Hip Locations
-locs.og.KneeAav = mean(locs_knee_ogA); locs.og.KneeAsd = std(locs_knee_ogA);
-locs.og.KneePav = mean(locs_knee_ogP); locs.og.KneePsd = std(locs_knee_ogP);
+locs.P.Kneeav = mean(locs_kneeP); locs.P.Kneesd = std(locs_kneeP);
+locs.A.Kneeav = mean(locs_kneeA); locs.A.Kneesd = std(locs_kneeA);
+locs.postA.Kneeav = mean(locs_kneepostA); locs.postA.Kneesd = std(locs_kneepostA);
+locs.postB.Kneeav = mean(peaks_kneepostB); locs.postB.Kneesd = std(peaks_kneepostB);
+locs.postC.Kneeav = mean(peaks_kneepostC); locs.postC.Kneesd = std(peaks_kneepostC);
 
-locs.tm.KneeAav = mean(locs_knee_tmA); locs.og.KneeAsd = std(locs_knee_tmA);
-locs.tm.KneePav = mean(locs_knee_tmP); locs.og.KneePsd = std(locs_knee_tmP);
+locs.P.Hipav = mean(locs_hipP); locs.P.Kneesd = std(locs_hipP);
+locs.A.Hipav = mean(locs_hipA); locs.A.Kneesd = std(locs_hipA);
+locs.postA.Hipav = mean(locs_hippostA); locs.postA.Kneesd = std(locs_hippostA);
+locs.postB.Hipav = mean(peaks_hippostB); locs.postB.Kneesd = std(peaks_hippostB);
+locs.postC.Hipav = mean(peaks_hippostC); locs.postC.Kneesd = std(peaks_hippostC);
 
-locs.og.HipAav = mean(locs_hip_ogA); locs.og.HipAsd = std(locs_hip_ogA);
-locs.og.HipPav = mean(locs_hip_ogP); locs.og.HipPsd = std(locs_hip_ogP);
-
-locs.tm.HipAav = mean(locs_hip_tmA); locs.og.HipAsd = std(locs_hip_tmA);
-locs.tm.HipPav = mean(locs_hip_tmP); locs.og.HipPsd = std(locs_hip_tmP);
 
 %% Knee And Hip Magnitudes and location vectors
-mags.og.KneeA = peaks_knee_ogA;
-mags.og.KneeP = peaks_knee_ogP;
-mags.og.HipA = peaks_hip_ogA;
-mags.og.HipP = peaks_hip_ogP;
-mags.tm.KneeA = peaks_knee_tmA;
-mags.tm.KneeP = peaks_knee_tmP;
-mags.tm.HipA = peaks_hip_tmA;
-mags.tm.HipP = peaks_hip_tmP;
+mags.P.Knee = peaks_kneeP;
+mags.A.Knee = peaks_kneeA;
+mags.postA.Knee = peaks_kneepostA;
+mags.postB.Knee = peaks_kneepostB;
+mags.postC.Knee = peaks_kneepostC;
 
-locs.og.KneeA = locs_knee_ogA;
-locs.og.KneeP = locs_knee_ogP;
-locs.og.HipA = locs_hip_ogA;
-locs.og.HipP = locs_hip_ogP;
-locs.tm.KneeA = locs_knee_tmA;
-locs.tm.KneeP = locs_knee_tmP;
-locs.tm.HipA = locs_hip_tmA;
-locs.tm.HipP = locs_hip_tmP;
+mags.P.Knee = peaks_kneeP;
+mags.A.Knee = peaks_kneeA;
+mags.postA.Knee = peaks_kneepostA;
+mags.postB.Knee = peaks_kneepostB;
+mags.postC.Knee = peaks_kneepostC;
 
-%%
+locs.P.Knee = locs_kneeP;
+locs.A.Knee = locs_kneeA;
+locs.postA.Knee = locs_kneepostA;
+locs.postB.Knee = locs_kneepostB;
+locs.postC.Knee = locs_kneepostC;
 
-changes.knee.oglocs = locs_knee_ogA - locs_knee_ogP;
-changes.knee.tmlocs = locs_knee_tmA - locs_knee_tmP;
-changes.knee.oglocsav = mean(changes.knee.oglocs);
-changes.knee.tmlocsav = mean(changes.knee.tmlocs);
-changes.knee.oglocssd = std(changes.knee.oglocs);
-changes.knee.tmlocssd = std(changes.knee.tmlocs);
+locs.P.Hip = locs_hipP;
+locs.A.Hip = locs_hipA;
+locs.postA.Hip = locs_hippostA;
+locs.postB.Hip = locs_hippostB;
+locs.postC.Hip = locs_hippostC;
 
-changes.knee.ogmags = peaks_knee_ogA - peaks_knee_ogP;
-changes.knee.tmmags = peaks_knee_tmA - peaks_knee_tmP;
-changes.knee.ogmagsav = mean(changes.knee.ogmags);
-changes.knee.tmmagsav = mean(changes.knee.tmmags);
-changes.knee.ogmagssd = std(changes.knee.ogmags);
-changes.knee.tmmagssd = std(changes.knee.tmmags);
+%% Calculating changes in locations and magnitudes of peaks.
 
-changes.hip.oglocs = locs_hip_ogA - locs_hip_ogP;
-changes.hip.tmlocs = locs_hip_tmA - locs_hip_tmP;
-changes.hip.oglocsav = mean(changes.hip.oglocs);
-changes.hip.tmlocsav = mean(changes.hip.tmlocs);
-changes.hip.oglocssd = std(changes.hip.oglocs);
-changes.hip.tmlocssd = std(changes.hip.tmlocs);
+% Knee flexion angle magnitudes and locations
+changes.knee.postalocs = locs_kneepostA - locs_kneeP;
+changes.knee.postblocs = locs_kneepostB - locs_kneeP;
+changes.knee.postclocs = locs_kneepostC - locs_kneeP;
 
-changes.hip.ogmags = peaks_hip_ogA - peaks_hip_ogP;
-changes.hip.tmmags = peaks_hip_tmA - peaks_hip_tmP;
-changes.hip.ogmagsav = mean(changes.hip.ogmags);
-changes.hip.tmmagsav = mean(changes.hip.tmmags);
-changes.hip.ogmagssd = std(changes.hip.ogmags);
-changes.hip.tmmagssd = std(changes.hip.tmmags);
+changes.knee.postaAVlocs = [ mean(changes.knee.postalocs); ...
+    std( changes.knee.postalocs ) ];
+changes.knee.postbAVlocs = [ mean(changes.knee.postblocs) ...
+    std( changes.knee.postblocs ) ];
+changes.knee.postcAVlocs = [ mean(changes.knee.postclocs) ...
+    std( changes.knee.postclocs ) ];
 
+changes.knee.postamags = peaks_kneepostA - peaks_kneeP;
+changes.knee.postbmags = peaks_kneepostB - peaks_kneeP;
+changes.knee.postcmags = peaks_kneepostC - peaks_kneeP;
+
+%   Means and standard deviations
+changes.knee.postaAVmags = [ mean(changes.knee.postamags) ...
+    std( changes.knee.postamags ) ];
+changes.knee.postbAVmags = [ mean(changes.knee.postbmags) ...
+    std(changes.knee.postbmags) ];
+changes.knee.postcAVmags = [ mean(changes.knee.postcmags) ...
+    std( changes.knee.postcmags ) ];
+
+% Hip flexion angle magnitudes and locations.
+changes.hip.postalocs = locs_kneepostA - locs_kneeP;
+changes.hip.postblocs = locs_kneepostB - locs_kneeP;
+changes.hip.postclocs = locs_kneepostC - locs_kneeP;
+
+changes.hip.postaAVlocs = [ mean(changes.hip.postalocs) ...
+    std( changes.hip.postalocs ) ];
+changes.hip.postbAVlocs = [ mean(changes.hip.postblocs) ...
+    std( changes.hip.postblocs ) ];
+changes.hip.postcAVlocs = [ mean(changes.hip.postclocs) ...
+    std( changes.hip.postclocs ) ];
+
+changes.hip.postamags = peaks_kneepostA - peaks_kneeP;
+changes.hip.postbmags = peaks_kneepostB - peaks_kneeP;
+changes.hip.postcmags = peaks_kneepostC - peaks_kneeP;
+
+changes.hip.postaAVmags = [ mean(changes.hip.postamags) ...
+    std( changes.hip.postalocs ) ];
+changes.hip.postbAVmags = [ mean(changes.hip.postbmags) ...
+    std( changes.hip.postblocs ) ];
+changes.hip.postcAVmags = [ mean(changes.hip.postcmags)...
+    std( changes.hip.postclocs ) ];
 end
 

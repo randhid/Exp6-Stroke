@@ -1,11 +1,11 @@
-function [ja1, ja2, ja3] = readAnklepos(filelist, colheader_start_line)
+function [ja1, ja2, ja3] = readJAeachcycle(filelist, colheader_start_line)
 %Reads CALEX Each_Cycle Files, now follows ANkleposition template but can
 %be edited.
 %   Outputs Ankleposition in x and y, reads each x and y column, ignored z
 %   position columns.
 %   make more lines to 
 
-    fprintf('Reading  files..')
+    fprintf('Reading  files...')
     ja1 = [];
     ja2 = [];
     ja3 = [];
@@ -22,7 +22,7 @@ function [ja1, ja2, ja3] = readAnklepos(filelist, colheader_start_line)
             ja3 = [ja3, filedata.data(:, j+3)];
         end
         end
-    fprintf('Done!')
+    fprintf('Done! \n')
     end
 
 end

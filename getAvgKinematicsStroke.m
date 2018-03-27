@@ -1,0 +1,39 @@
+function [ ROM ] = getAvgKinematicsStroke( Ankle_Kinematics )
+% Returns average SL, step height for all subjects
+% Input is a struct containing all subject's processed gait kinematics
+% Ouputs vector of average step heights and legnths and their standard
+% deviations.
+    
+    % Produces means vectors of SL, SH and their standard deviations
+    for i = 1:length(Ankle_Kinematics)
+        Passive = mean([Ankle_Kinematics.P], 1);
+        Pretraining = mean([Ankle_Kinematics.T], 1);
+        Training = mean([Ankle_Kinematics.A], 1);
+        Posta = mean([Ankle_Kinematics.Posta], 1);
+        Postb = mean([Ankle_Kinematics.Postb], 1);
+        Postc = mean([Ankle_Kinematics.Postc], 1);
+    end
+    
+    % Calcautes means across all columns of a relevant variable 
+    i = 1:length(Passive)/length(Ankle_Kinematics):length(Passive);
+    j = i + 1;
+    ROM.P = [ mean(Passive(i)), mean(Passive(j)), ...
+        std( Passive(i) ), ...
+        std( Passive(j) )] ;
+    ROM.T = [ mean(Pretraining(i)), mean(Pretraining(j)), ...
+        std( Pretraining(i) ), ...
+        std( Pretraining(j) ), ];
+    ROM.A = [ mean(Training(i)), mean(Training(j)), ...
+        std( Training(i)), ...
+        std( Training(j)) ];
+    ROM.Posta = [ mean(Posta(i)), mean(Posta(j)), ...
+        std( Posta(i) ), ...
+        std( Posta(j) ) ];
+    ROM.Postb = [ mean(Postb(i)), mean(Postb(j)), ...
+        std( Postb(i) ), ...
+        std( Postb(j) ) ];
+    ROM.Postc = [ mean(Postc(i)), mean(Postc(j)), ...
+        std(Postc(i)), ...
+        std(Postc(j)) ];
+        
+end

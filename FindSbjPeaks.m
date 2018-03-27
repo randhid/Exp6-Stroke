@@ -2,72 +2,104 @@ function [res] = FindSbjPeaks(parentfolderavg)
 %% Joint Angles Averages
 
 %%%%%%%%%%%%%%%%%%%%%Overground%%%%%%%%%%%%%%%%%%%%%
-% Free walking
+% Passive
+flP = rdir([parentfolderavg,strcat('\*freewalking*.txt')]);
+[ hipfP, ~ , kneeP ] = readJAAvg(flP, 2);
 
-flogfw = rdir([parentfolderavg,strcat('\*og_fw*.txt')]);
-[ oghipP, ~ , ogkneeP ] = readJAAvg(flogfw, 2);
+% Pre-training
+flT = rdir([parentfolderavg,strcat('\*pretraining*.txt')]);
+[ hipfT, ~ , kneeT ] = readJAAvg(flT, 2);
 
-%Force Field mode
-flogff = rdir([parentfolderavg,strcat('\*og_ff*.txt')]);
-[ oghipA, ~ , ogkneeA ] = readJAAvg(flogff, 2);
+% Training
+flA = rdir([parentfolderavg,strcat('\*_training*.txt')]);
+[ hipfA, ~ , kneeA ] = readJAAvg(flA, 2);
 
-%%%%%%%%%%%%%%%%%%%%%Treadmill%%%%%%%%%%%%%%%%%%%%%
+% Post A
+flposta = rdir([parentfolderavg,strcat('\*posta*.txt')]);
+[ hipfpostA, ~ , kneepostA ] = readJAAvg(flposta, 2);
 
-% Free walking
+% Post B
+flpostb = rdir([parentfolderavg,strcat('\*postb*.txt')]);
+[ hipfpostB, ~ , kneepostB ] = readJAAvg(flpostb, 2);
 
-fltmfw = rdir([parentfolderavg,strcat('\*tm_fw*.txt')]);
-[ tmhipP, ~ , tmkneeP ] = readJAAvg(fltmfw, 2);
+% Post C
+flpostc = rdir([parentfolderavg,strcat('\*postc*.txt')]);
+[ hipfpostC, ~ , kneepostC ] = readJAAvg(flpostc, 2);
 
-%Force Field mode
-fltmff = rdir([parentfolderavg,strcat('\*tm_ff*.txt')]);
-[ tmhipA, ~ , tmkneeA ] = readJAAvg(fltmff, 2);
-
-
-
-%% Plot Random Stuff
+%% Plot Knee and Hip Flexion changes from Baseline
+% Knee
 figure, 
-subplot(211), hold on, set(gca, 'xcolor', 'none')
-plotJASelected(rad2deg(ogkneeP), '-r'), plotJASelected(rad2deg(ogkneeA), ...
+subplot(221), hold on, set(gca, 'xcolor', 'none')
+plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneeA), ...
     '--b'), title('(a)') %Overground
-legend('Passive', 'Active'), legend boxoff
+legend('Baseline', 'Training'), legend boxoff
 
-subplot(212),  hold on
-plotJASelected(rad2deg(tmkneeP), '-r'), plotJASelected(rad2deg(tmkneeA), ...
+subplot(222),  hold on
+plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneepostA), ...
     '--b'), title('(b)') %Treadmill
-%legend('Transparent', 'Active')
+legend('Baseline', 'Post A')
 
+subplot(223), hold on, set(gca, 'xcolor', 'none')
+plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneepostB), ...
+    '--b'), title('(a)') %Overground
+legend('Baseline', 'Post B'), legend boxoff
+
+subplot(224),  hold on
+plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneepostC), ...
+    '--b'), title('(b)') %Treadmill
+legend('Baseline', 'Post C')
+
+% Hip
 figure, 
-subplot(211), hold on, set(gca, 'xcolor', 'none')
-plotJASelected(rad2deg(oghipP), '-r'), plotJASelected(rad2deg(oghipA), '--b'), title('(a)') %Overground
-legend('Passive', 'Active'), legend boxoff
+subplot(221), hold on, set(gca, 'xcolor', 'none')
+plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfA), ...
+    '--b'), title('(a)') %Overground
+legend('Baseline', 'Training'), legend boxoff
 
-subplot(212),  hold on
-plotJASelected(rad2deg(tmhipP), '-r'), plotJASelected(rad2deg(tmhipA), '--b'), title('(b)') %Treadmill
-%legend('Transparent', 'Active')
+subplot(222),  hold on
+plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfpostA), ...
+    '--b'), title('(b)') %Treadmill
+legend('Baseline', 'Post A'), legend boxoff
+
+subplot(223), hold on, set(gca, 'xcolor', 'none')
+plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfpostB), ...
+    '--b'), title('(c)') %Overground
+legend('Baseline', 'Post B'), legend boxoff
+
+subplot(224),  hold on
+plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfpostC), ...
+    '--b'), title('(d)') %Treadmill
+legend('Baseline', 'Post C'), legend boxoff
+
 
 
 %% Finding Knee and Hip Angle Peaks
 % Knee
-[res.knee.ogpeaksA, res.knee.oglocsA] = findpeaks(rad2deg(-ogkneeP), ...
-    linspace(0, 100, length(ogkneeP)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
-[res.knee.ogpeaksP, res.knee.oglocsP] = findpeaks(rad2deg(-ogkneeA), ...
-    linspace(0, 100, length(ogkneeA)), 'MinPeakDistance', 40 , 'MinPeakHeight', 20);
+[res.knee.Ppeaks, res.knee.Plocs] = findpeaks(rad2deg(-kneeP), ...
+    linspace(0, 100, length(kneeP)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
+[res.knee.Apeaks, res.knee.Alocs] = findpeaks(rad2deg(- mean(kneeA, 2) ), ...
+    linspace(0, 100, length(kneeA)), 'MinPeakDistance', 40 , 'MinPeakHeight', 20);
 
-[res.knee.tmpeaksA, res.knee.tmlocsA] = findpeaks(rad2deg(-tmkneeA), ...
-    linspace(0, 100, length(tmkneeA)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
-[res.knee.tmpeaksP, res.knee.tmlocsP] = findpeaks(rad2deg(-tmkneeP), ...
-    linspace(0, 100, length(tmkneeP)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
+[res.knee.postApeaks, res.knee.postAlocs] = findpeaks(rad2deg(-kneepostA), ...
+    linspace(0, 100, length(kneepostA)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
+[res.knee.postBpeaks, res.knee.postBlocs] = findpeaks(rad2deg(-kneepostB), ...
+    linspace(0, 100, length(kneepostB)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
+[res.knee.postCpeaks, res.knee.postClocs] = findpeaks(rad2deg(-kneepostC), ...
+    linspace(0, 100, length(kneepostC)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
 
 % Hip
-[res.hip.ogpeaksA, res.hip.oglocsA] = findpeaks(rad2deg(-oghipP), ...
-    linspace(0, 100, length(oghipP)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
-[res.hip.ogpeaksP, res.hip.oglocsP] = findpeaks(rad2deg(-oghipA), ...
-    linspace(0, 100, length(oghipA)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
+[res.hip.Ppeaks, res.hip.Plocs] = findpeaks(rad2deg(-hipfP), ...
+    linspace(0, 100, length(hipfP)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
+[res.hip.Apeaks, res.hip.Alocs] = findpeaks(rad2deg(-mean(hipfA, 2)), ...
+    linspace(0, 100, length(hipfA)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
 
-[res.hip.tmpeaksA, res.hip.tmlocsA] = findpeaks(rad2deg(-tmhipA), ...
-    linspace(0, 100, length(tmhipA)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
-[res.hip.tmpeaksP, res.hip.tmlocsP] = findpeaks(rad2deg(-tmhipP), ...
-    linspace(0, 100, length(tmhipP)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
+[res.hip.postApeaks, res.hip.postAlocs] = findpeaks(rad2deg(-hipfpostA), ...
+    linspace(0, 100, length(hipfpostA)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
+[res.hip.postBpeaks, res.hip.postBlocs] = findpeaks(rad2deg(-hipfpostB), ...
+    linspace(0, 100, length(hipfpostB)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
+
+[res.hip.postCpeaks, res.hip.postClocs] = findpeaks(rad2deg(-hipfpostC), ...
+    linspace(0, 100, length(hipfpostC)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
 
 end
 

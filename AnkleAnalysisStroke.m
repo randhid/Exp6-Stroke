@@ -1,14 +1,14 @@
-function [ROM ] = AnkleAnalysisStroke(subjectnumber, ~)
-    
+function [ ROM ] = AnkleAnalysisStroke(subjectnumber, ~) 
+% Find the step heights and step lengths of a single patient based on the
+% Average Ankle positons for a 
+
     % Filepaths for Experiment data
     parentfolderavg = SelectFolder( 'clx_average_1min', subjectnumber );
 
     %% Gait Templates
-
     [ ref ] = importGaitTemplate( parentfolderavg, '\*GaitTemplate*.txt', 3 );
 
     %% Anklepositions
-    %%%%%%%%%%%%%%%%%%%%%Overground%%%%%%%%%%%%%%%%%%%%%
     % Baseline
     [ Pav ] = readAvgAnklepos( parentfolderavg, '\*freewalking*.txt',  2); %Average
 
@@ -23,8 +23,7 @@ function [ROM ] = AnkleAnalysisStroke(subjectnumber, ~)
         Aav.y = mean( [ Aavi.y ], 2);
     end
 
-    %%%%%%%%%%%%%%%%%%%%%Treadmill%%%%%%%%%%%%%%%%%%%%%
-    % Post training A mode
+    % Post training A 
     [ Posta ] = readAvgAnklepos( parentfolderavg, '\*posta*.txt', 2 ); %Average
 
     % Post Training B
@@ -33,9 +32,7 @@ function [ROM ] = AnkleAnalysisStroke(subjectnumber, ~)
     % Active mode
     [ Postc ] = readAvgAnklepos(parentfolderavg, '\*postc*.txt', 2 ); %Average
 
-
     %% Plotting Graphs 
-    
     if nargin > 1
         figure, hold on
 
@@ -64,20 +61,16 @@ function [ROM ] = AnkleAnalysisStroke(subjectnumber, ~)
         legend(gca, 'hide'), title('(d)'), set(gca, 'ycolor', 'none')
         title('Training')
     else
-        fprintf('Add a second input to function if plots needed.')
-    
+        fprintf('Add a second input to function if plots needed.')  
     end
 
     %% StepHeights
-    %Treadmill
     [ ROM.P ] = CalcAnkleROM( [Pav.x, Pav.y] ); %Passive
     [ ROM.T ] = CalcAnkleROM( [Tav.x, Tav.y] ); %Transparent
     [ ROM.A ] = CalcAnkleROM( [Aav.x, Aav.y] ); %Active/Training
 
-    %Overground
     [ ROM.Posta ] = CalcAnkleROM( [Posta.x, Posta.y] ); %Posta
     [ ROM.Postb ] = CalcAnkleROM( [Postb.x, Postb.y] ); %Postb
     [ ROM.Postc ] = CalcAnkleROM( [Postc.x, Postc.y] ); %Postc
-
 
 end

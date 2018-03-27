@@ -43,75 +43,75 @@
 %% Ankle ROM and Plots for one subject:
     [ ROM ] = AnkleAnalysisStroke( Single_Subject, 1 ); % Second input produces a plot
 
-%% AnkleROM and optoional Plots of all subjects
+%% Ankle Kinematics and optoional Plots of all subjects
     for i  = 1:length(Subject_List)
-        [ ROM ] = AnkleAnalysisStroke( char( Subject_List(i) ), 1);
-        allROM(i) = ROM;
+        allROM(i) = AnkleAnalysisStroke( char( Subject_List(i) ), 1);
     end
     
-    meanROM = 
+%% Means of Ankle Kinematics     
+    Step_Means = getAvgKinematicsStroke(allROM);
+    plotGaitKinematicsStroke(allROM, 1, 1, 'Average Step Length', ' cm')
+    plotGaitKinematicsStroke(allROM, 1, 2, 'Average Step Height', ' cm')
     
 %% Plotting Gait Kinematics
-plotGaitKinematicsStroke(allROM, 1, 1, 'Step Length', 'cm')
-plotGaitKinematicsStroke(allROM, 1, 2, 'Step Height', 'cm')
+    plotGaitKinematicsStroke(allROM, 1, 1, 'Step Length', ' cm')
+    plotGaitKinematicsStroke(allROM, 1, 2, 'Step Height', ' cm')
 
-plotGaitKinematicsStroke(allROM, 2, 1, 'Step Length', 'cm')
-plotGaitKinematicsStroke(allROM, 2, 2, 'Step Height', 'cm')
+    plotGaitKinematicsStroke(allROM, 2, 1, 'Step Length', ' cm')
+    plotGaitKinematicsStroke(allROM, 2, 2, 'Step Height', ' cm')
 
-plotGaitKinematicsStroke(allROM, 3, 1, 'Step Length', 'cm')
-plotGaitKinematicsStroke(allROM, 3, 2, 'Step Height', 'cm')
+    plotGaitKinematicsStroke(allROM, 3, 1, 'Step Length', ' cm')
+    plotGaitKinematicsStroke(allROM, 3, 2, 'Step Height', ' cm')
 
 %% Joint Angles
     JAAnalysisStroke( Single_Subject, 1 )
  
-%% Joint Angle Peaks
-    [Peak_Locations, Peak_Magnitudes, Peak_Changes] = JointAnglePeaksOverground ( Subject_List );
+%% Joint Angle Peaks Single Subject
+    [Peak_Locations, Peak_Magnitudes, Peak_Changes] = ...
+        JointAnglePeaksOverground( Single_Subject );
+    
+%% All subjects
+for i = 1:length(Subject_List)
+    [ all_Peak_Locations(i), all_Peak_Magnitudes(i), all_Peak_Changes(i) ] =...
+        JointAnglePeaksOverground( Subject_List(i) );
+end
+
 
 %% Deviation Area for one Subject
-    [ avDA, sdDA] = DAOneSubjectStroke( Single_Subject, '' );
+    [ DA ] = DAOneSubjectStroke( Single_Subject, '' );
 
 %% Deviation Area for all Subjects
     for i = 1:length(Subject_List)
-        [ avDA, sdDA] = DAOneSubjectStroke( Subject_List(i) , '' );     
-        allavDA.avg(i) = avDA;
-        allavDA.sd(i) = sdDA;
+        [ allDA(i) ] = DAOneSubjectStroke( Subject_List(i) , '' );
     end
-    
-    avDA.A = mean( [ allavDA.avg.ogA ] );
-    sdDA.A = std( [ allavDA.avg.ogA ] );
+    allDAStats.A = [ mean( [ allDA.A ] ), std( [ allDA.A ] ) ];
+    allDAStats.Posta = [ mean( [ allDA.Posta ] ), std( [ allDA.Posta ] ) ];
+    allDAStats.Postb = [ mean( [ allDA.Postb ] ), std( [ allDA.Postb ] ) ];
+    allDAStats.Postc = [ mean( [ allDA.Postc ] ), std( [ allDA.Postc ] ) ];  
     
 
-%% Adaptation Between Laps for one Subject [[[Reorganize folders!!!]]]]]
-    [ avDALap1, sdDALap1] = DAOneSubjectOverground( Single_Subject, '_s1*' );
-    [ avDALap3, sdDALap3] = DAOneSubjectOverground( Single_Subject, '_s2*' );
-    [ avDALap6, sdDALap6] = DAOneSubjectOverground( Single_Subject, '_s4*' );
+%% Adaptation Between Sessions Assistive mod eand Posts for one subject.
+    [ DAs1 ] = DAOneSubjectStroke( Single_Subject, '_s1*' );
+    [ DAs3 ] = DAOneSubjectStroke( Single_Subject, '_s2*' );
+    [ DAs4 ] = DAOneSubjectStroke( Single_Subject, '_s4*' );
 
-%% Adaptation Between Laps for All Subjects
+%% Average Adaptation Between Laps for All Subjects
     for i = 1:length(Subject_List)
-        [ avDALap1, sdDALap1] = DAOneSubjectStroke( char( Subject_List(i) ), '_s1*' );
-        [ avDALap3, sdDALap3] = DAOneSubjectStroke( char( Subject_List(i) ), '_s3*' );
-        [ avDALap6, sdDALap6] = DAOneSubjectStroke( char( Subject_List(i) ), '_s6*' );
-        allavDALap1.avg(i) = avDALap1;
-        allavDALap1.sd(i) = sdDALap1;
-        allavDALap3.avg(i) = avDALap3;
-        allavDALap3.sd(i) = sdDALap3;       
-        allavDALap6.avg(i) = avDALap6;
-        allavDALap6.sd(i) = sdDALap6;
-    end
-    
-    avDALap1.A = mean( [ allavDALap1.avg.A ] );
-    sdDALap1.A = std( [ allavDALap1.avg.A ] );
-    avDALap3.A = mean( [ allavDALap3.avg.A ] );
-    sdDALap3.A = std( [ allavDALap3.avg.A ] );
-    avDALap6.A = mean( [ allavDALap6.avg.A ] );
-    sdDALap6.A = std( [ allavDALap6.avg.A ] );
-
+        [ DAs1(i) ] = DAOneSubjectStroke( char( Subject_List(i) ), '_s1*' );
+        [ DAs3(i) ] = DAOneSubjectStroke( char( Subject_List(i) ), '_s3*' );
+        [ DAs4(i) ] = DAOneSubjectStroke( char( Subject_List(i) ), '_s4*' );
+    end  
+    DAs1Avg = [ mean( [ DAs1.A ] ), std( [ DAs1.A ] ) ];
+    DAs3Avg = [ mean( [ DAs3.A ] ), std( [ DAs3.A ] ) ];
+    DAs4Avg = [ mean( [ DAs4.A ] ), std( [ DAs4.A ] ) ];
+ 
 %% Plotting the deviation area lap by lap
-    da_lap_cats = categorical( {'S1', 'S3' ,'S6'} );
-    da_lap_cats = reordercats(da_lap_cats, {'S1', 'S3' ,'S6'} );
+    da_session_cats = categorical( {'S1', 'S3' ,'S4'} );
     figure, hold on
-    bar(da_lap_cats, [avDALap1.A avDALap3.A avDALap6.A], 'grouped', 'w', 'LineWidth', 1.5)
-    errorbar(da_lap_cats, [avDALap1.A avDALap3.A avDALap6.A], [sdDALap1.A sdDALap3.A sdDALap6.A], '.k', 'Linewidth', 1.5)
+    bar( da_session_cats, [DAs1Avg(1) DAs3Avg(1) DAs4Avg(1)], 'grouped', ... 
+        'w', 'LineWidth', 1.5)
+    errorbar( da_session_cats, [ DAs1Avg(1) DAs3Avg(1) DAs4Avg(1) ], ...
+        [ DAs1Avg(2) DAs3Avg(2) DAs4Avg(2) ], '.k', 'Linewidth', 1.5)
     ylabel('Normalized Deviation Area')
     set(gca, 'LineWidth', 2, 'FontSize', 16.0), box off
 
