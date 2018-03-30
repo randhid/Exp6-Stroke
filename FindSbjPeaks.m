@@ -29,46 +29,47 @@ flpostc = rdir([parentfolderavg,strcat('\*postc*.txt')]);
 %% Plot Knee and Hip Flexion changes from Baseline
 % Knee
 figure, 
-subplot(221), hold on, set(gca, 'xcolor', 'none')
+subplot(221), hold on, set(gca, 'xcolor', 'none');
 plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneeA), ...
-    '--b'), title('(a)') %Overground
-legend('Baseline', 'Training'), legend boxoff
+    '--b'), %title('(a)')
+legend('Baseline', 'Training', 'Location', 'southwest'), legend boxoff
 
 subplot(222),  hold on
-plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneepostA), ...
-    '--b'), title('(b)') %Treadmill
-legend('Baseline', 'Post A')
+plotJASelected(rad2deg(kneeP), '-r'), set(gca, 'xcolor', 'none', 'ycolor' ...
+    , 'none');
+plotJASelected(rad2deg(kneepostA), '--b'), % title('(b)')
+legend('Baseline', 'Post A', 'Location', 'southwest'), legend boxoff
 
-subplot(223), hold on, set(gca, 'xcolor', 'none')
+subplot(223), hold on, 
 plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneepostB), ...
-    '--b'), title('(a)') %Overground
-legend('Baseline', 'Post B'), legend boxoff
+    '--b'), % title('(a)')
+legend('Baseline', 'Post B', 'Location', 'southwest'), legend boxoff
 
-subplot(224),  hold on
+subplot(224),  hold on, set(gca, 'ycolor', 'none');
 plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneepostC), ...
-    '--b'), title('(b)') %Treadmill
-legend('Baseline', 'Post C')
+    '--b'), % title('(b)')
+legend('Baseline', 'Post C', 'Location', 'southwest'), legend boxoff
 
 % Hip
 figure, 
-subplot(221), hold on, set(gca, 'xcolor', 'none')
+subplot(221), hold on, set(gca, 'xcolor', 'none');
 plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfA), ...
-    '--b'), title('(a)') %Overground
+    '--b'), % title('(a)')
 legend('Baseline', 'Training'), legend boxoff
 
-subplot(222),  hold on
+subplot(222),  hold on, set(gca, 'xcolor', 'none', 'ycolor', 'none' );
 plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfpostA), ...
-    '--b'), title('(b)') %Treadmill
+    '--b'), % title('(b)')
 legend('Baseline', 'Post A'), legend boxoff
 
-subplot(223), hold on, set(gca, 'xcolor', 'none')
+subplot(223), hold on, 
 plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfpostB), ...
-    '--b'), title('(c)') %Overground
+    '--b'), % title('(c)')
 legend('Baseline', 'Post B'), legend boxoff
 
-subplot(224),  hold on
+subplot(224),  hold on, set(gca, 'ycolor', 'none');
 plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfpostC), ...
-    '--b'), title('(d)') %Treadmill
+    '--b'), % title('(d)')
 legend('Baseline', 'Post C'), legend boxoff
 
 

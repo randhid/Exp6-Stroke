@@ -1,7 +1,7 @@
-function [ stats ] = DAOneSubjectStroke( subject , lap )
+function [ stats ] = DAOneSubjectStroke( subject , averagesfolder, lap )
 % This calcualtes the deviation area between the average ankle trajectory
 % of Active mode with the target of treadmill and Overground each.
-    parentfolder = SelectFolder('clx_average_1min', subject);
+    parentfolder = SelectFolder(averagesfolder, subject);
 
     %% Gait Templates
 

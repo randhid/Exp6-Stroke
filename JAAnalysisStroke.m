@@ -1,6 +1,13 @@
-function  JAAnalysisStroke( subjectnumber, ~)
-parentfolderavg = SelectFolder( 'clx_average_1min', subjectnumber );
-parentfolderecy = SelectFolder( 'clx_ja_1min', subjectnumber );
+function  JAAnalysisStroke( subjectnumber, averagesfolder, ... 
+    jointanglefolder, ~)
+% Returns plots of all hip flexion, adduction and knee flexion for one
+% subject. Outputs 18 plots for one subject showing the changes for each
+% session from baseline. First three plots show baseline calculated from
+% GiatTemplate file (red), vs baseline calculated from marked files as a
+% check that the same subject files are being used.
+
+parentfolderavg = SelectFolder( averagesfolder, subjectnumber );
+parentfolderecy = SelectFolder( jointanglefolder, subjectnumber );
 
 %% Gait Templates
 TFile = rdir([parentfolderavg, strcat('\*GaitTemplate*.txt')]);

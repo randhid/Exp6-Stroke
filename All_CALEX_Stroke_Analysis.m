@@ -41,44 +41,46 @@
 %  RMS_Error.tm.knee.sd = std( [allavg.tm.knee] );
 
 %% Ankle ROM and Plots for one subject:
-    [ ROM ] = AnkleAnalysisStroke( Single_Subject, 1 ); % Second input produces a plot
+    [ ROM ] = AnkleAnalysisStroke( Single_Subject, 'clx_average_1min' );
+    % Second input produces a plot
 
 %% Ankle Kinematics and optoional Plots of all subjects
     for i  = 1:length(Subject_List)
-        allROM(i) = AnkleAnalysisStroke( char( Subject_List(i) ), 1);
+        allROM(i) = AnkleAnalysisStroke( char( Subject_List(i) ), ...
+            'clx_average_1min', 1 );
     end
     
 %% Means of Ankle Kinematics     
     Step_Means = getAvgKinematicsStroke(allROM);
-    plotGaitKinematicsStroke(allROM, 1, 1, 'Average Step Length', ' cm')
-    plotGaitKinematicsStroke(allROM, 1, 2, 'Average Step Height', ' cm')
+    plotGaitKinematicsStroke(Step_Means, 1, 1, 'Average Step Length', ' m')
+    plotGaitKinematicsStroke(Step_Means, 1, 2, 'Average Step Height', ' m')
     
 %% Plotting Gait Kinematics
-    plotGaitKinematicsStroke(allROM, 1, 1, 'Step Length', ' cm')
-    plotGaitKinematicsStroke(allROM, 1, 2, 'Step Height', ' cm')
+    plotGaitKinematicsStroke(allROM, 1, 1, 'Step Length', ' m')
+    plotGaitKinematicsStroke(allROM, 1, 2, 'Step Height', ' m')
 
-    plotGaitKinematicsStroke(allROM, 2, 1, 'Step Length', ' cm')
-    plotGaitKinematicsStroke(allROM, 2, 2, 'Step Height', ' cm')
+    plotGaitKinematicsStroke(allROM, 2, 1, 'Step Length', ' m')
+    plotGaitKinematicsStroke(allROM, 2, 2, 'Step Height', ' m')
 
-    plotGaitKinematicsStroke(allROM, 3, 1, 'Step Length', ' cm')
-    plotGaitKinematicsStroke(allROM, 3, 2, 'Step Height', ' cm')
+    plotGaitKinematicsStroke(allROM, 3, 1, 'Step Length', ' m')
+    plotGaitKinematicsStroke(allROM, 3, 2, 'Step Height', ' m')
 
 %% Joint Angles
-    JAAnalysisStroke( Single_Subject, 1 )
+    JAAnalysisStroke( Single_Subject, 'clx_average_1min', 'clx_ja_1min', 3)
  
 %% Joint Angle Peaks Single Subject
     [Peak_Locations, Peak_Magnitudes, Peak_Changes] = ...
-        JointAnglePeaksOverground( Single_Subject );
+        JointAnglePeaksOverground( Single_Subject, 'clx_average_1min' );
     
 %% All subjects
 for i = 1:length(Subject_List)
     [ all_Peak_Locations(i), all_Peak_Magnitudes(i), all_Peak_Changes(i) ] =...
-        JointAnglePeaksOverground( Subject_List(i) );
+        JointAnglePeaksOverground( Subject_List(i), 'clx_average_1min' );
 end
 
 
 %% Deviation Area for one Subject
-    [ DA ] = DAOneSubjectStroke( Single_Subject, '' );
+    [ DA ] = DAOneSubjectStroke( Single_Subject, 'clx_average_1min', '' );
 
 %% Deviation Area for all Subjects
     for i = 1:length(Subject_List)
@@ -87,8 +89,20 @@ end
     allDAStats.A = [ mean( [ allDA.A ] ), std( [ allDA.A ] ) ];
     allDAStats.Posta = [ mean( [ allDA.Posta ] ), std( [ allDA.Posta ] ) ];
     allDAStats.Postb = [ mean( [ allDA.Postb ] ), std( [ allDA.Postb ] ) ];
-    allDAStats.Postc = [ mean( [ allDA.Postc ] ), std( [ allDA.Postc ] ) ];  
-    
+    allDAStats.Postc = [ mean( [ allDA.Postc ] ), std( [ allDA.Postc ] ) ]; 
+
+ %% Plot Deviation Area
+    da_session_cats = categorical( {'A', 'Post A' , 'Post B', 'Post C'} );
+    figure, hold on
+    bar( da_session_cats, [ allDAStats.A(1) allDAStats.Posta(1) ...
+         allDAStats.Postb(1) allDAStats.Postc(1) ], 'grouped', ... 
+        'w', 'LineWidth', 1.5)
+    errorbar( da_session_cats, [allDAStats.A(1) allDAStats.Posta(1) ...
+         allDAStats.Postb(1), allDAStats.Postc(1) ], [ allDAStats.A(2) ...
+         allDAStats.Posta(2) allDAStats.Postb(2), allDAStats.Postc(2) ], ...
+         '.k', 'Linewidth', 1.5 )
+    ylabel('Normalized Deviation Area')
+    set(gca, 'LineWidth', 2, 'FontSize', 16.0), box off
 
 %% Adaptation Between Sessions Assistive mod eand Posts for one subject.
     [ DAs1 ] = DAOneSubjectStroke( Single_Subject, '_s1*' );

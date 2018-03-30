@@ -1,4 +1,5 @@
-function [locs, mags, changes] = JointAnglePeaksOverground (Subject_List)
+function [locs, mags, changes] = JointAnglePeaksOverground (Subject_List, ...
+    averagesfolder )
 % Find the locations and magnitudes of peaks and their locations in the
 % gait cycle for hip and knee flexion for all subjects in a subject list.
 % Inputs: - subject lest a string vector 
@@ -6,9 +7,9 @@ function [locs, mags, changes] = JointAnglePeaksOverground (Subject_List)
 res = [];
 
 for i = 1:length(Subject_List)
-     parentfolderavg = SelectFolder('clx_average_1min', char ( Subject_List(i) ) );
+     parentfolderavg = SelectFolder( averagesfolder, char ( Subject_List(i) ) );
      [resi] = FindSbjPeaks(parentfolderavg);
-     res= [res, resi];
+     res = [res, resi];
 end
 
 %% Extracting peak times and magnitudes
@@ -40,7 +41,7 @@ for i = 1 : length(res)
 end 
 
 %%
-figure
+figure, title('Changes in Peak agnitude and timing for each subject')
 subplot(211), hold on
 plot(locs_kneeP, peaks_kneeP, '.r')
 plot(locs_kneeA, peaks_kneeA, '.b')
@@ -48,8 +49,9 @@ plot(locs_kneepostA, peaks_kneepostA, '.g')
 plot(locs_kneepostB, peaks_kneepostB, '.m')
 plot(locs_kneepostC, peaks_kneepostC, '.k')
 legend('Baseline', 'Training', 'PostA', 'PostB', 'PostC', ...
-    'Location', 'northeast')
+    'Location', 'northwest')
 title('Knee Flexion')
+ylabel('Peak Magnitude')
 
 subplot(212), hold on
 plot(locs_hipP, peaks_hipP, '.r')
@@ -57,6 +59,7 @@ plot(locs_hipA, peaks_hipA, '.b')
 plot(locs_hippostA, peaks_hippostA, '.g')
 plot(locs_hippostB, peaks_hippostB, '.m')
 plot(locs_hippostC, peaks_hippostC, '.k')
+xlabel('Gait Cycle %')
 title('Hip Flexion')
 
 
@@ -127,9 +130,9 @@ changes.knee.postcAVmags = [ mean(changes.knee.postcmags) ...
     std( changes.knee.postcmags ) ];
 
 % Hip flexion angle magnitudes and locations.
-changes.hip.postalocs = locs_kneepostA - locs_kneeP;
-changes.hip.postblocs = locs_kneepostB - locs_kneeP;
-changes.hip.postclocs = locs_kneepostC - locs_kneeP;
+changes.hip.postalocs = locs_hippostA - locs_hipP;
+changes.hip.postblocs = locs_hippostB - locs_hipP;
+changes.hip.postclocs = locs_hippostC - locs_hipP;
 
 changes.hip.postaAVlocs = [ mean(changes.hip.postalocs) ...
     std( changes.hip.postalocs ) ];
@@ -138,9 +141,9 @@ changes.hip.postbAVlocs = [ mean(changes.hip.postblocs) ...
 changes.hip.postcAVlocs = [ mean(changes.hip.postclocs) ...
     std( changes.hip.postclocs ) ];
 
-changes.hip.postamags = peaks_kneepostA - peaks_kneeP;
-changes.hip.postbmags = peaks_kneepostB - peaks_kneeP;
-changes.hip.postcmags = peaks_kneepostC - peaks_kneeP;
+changes.hip.postamags = peaks_hippostA - peaks_hipP;
+changes.hip.postbmags = peaks_hippostB - peaks_hipP;
+changes.hip.postcmags = peaks_hippostC - peaks_hipP;
 
 changes.hip.postaAVmags = [ mean(changes.hip.postamags) ...
     std( changes.hip.postalocs ) ];

@@ -7,18 +7,18 @@ function plotJAall(target, average, eachcycle)
     figure 
     if nargin < 3
         %Plot only averages
-        plot(GaitCycle, targetm, 'k')
-        plot(GaitCycle, average, 'b')
+        plot(GaitCycle, rad2deg(target), 'k')
+        plot(GaitCycle, rad2deg(average), 'b')
 
     else
         % plot each cycle as well
         for i = 1:size(eachcycle,2)
             hold on
-            plot(GaitCycle, eachcycle(:,i), 'y-');
+            plot(GaitCycle, rad2deg(eachcycle(:,i)), 'y-');
             alpha(.1)
-            plot(GaitCycle, target, 'r')
-            plot(linspace(0, 100, size(average, 1)), average, 'b')
-            ylabel('Angle (rad)')
+            plot(GaitCycle, rad2deg(target), 'r')
+            plot(linspace(0, 100, size(average, 1)), rad2deg(average), 'b')
+            ylabel('Angle (degree)')
             xlabel('% Gait Cycle')
             
             

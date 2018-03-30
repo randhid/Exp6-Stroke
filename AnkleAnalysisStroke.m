@@ -1,9 +1,9 @@
-function [ ROM ] = AnkleAnalysisStroke(subjectnumber, ~) 
+function [ ROM ] = AnkleAnalysisStroke( subjectnumber, subfolder , ~ ) 
 % Find the step heights and step lengths of a single patient based on the
 % Average Ankle positons for a 
 
     % Filepaths for Experiment data
-    parentfolderavg = SelectFolder( 'clx_average_1min', subjectnumber );
+    parentfolderavg = SelectFolder( subfolder , subjectnumber );
 
     %% Gait Templates
     [ ref ] = importGaitTemplate( parentfolderavg, '\*GaitTemplate*.txt', 3 );
@@ -33,7 +33,7 @@ function [ ROM ] = AnkleAnalysisStroke(subjectnumber, ~)
     [ Postc ] = readAvgAnklepos(parentfolderavg, '\*postc*.txt', 2 ); %Average
 
     %% Plotting Graphs 
-    if nargin > 1
+    if nargin > 2
         figure, hold on
 
         subplot(323)
