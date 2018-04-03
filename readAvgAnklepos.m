@@ -1,4 +1,5 @@
-function [AverageAnklePosition] = readAvgAnklepos( parentfolder, string, colheader_start_line)
+function [AverageAnklePosition] = readAvgAnklepos( parentfolder, ...
+    string, colheader_start_line)
 %Reads CALEX Each_Cycle Files, now follows ANkleposition template but can
 %be edited.
 %   Outputs Ankleposition in x and y, reads each x and y column, ignored z

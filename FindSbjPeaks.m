@@ -50,7 +50,7 @@ plotJASelected(rad2deg(kneeP), '-r'), plotJASelected(rad2deg(kneepostC), ...
     '--b'), % title('(b)')
 legend('Baseline', 'Post C', 'Location', 'southwest'), legend boxoff
 
-% Hip
+% Hip Flexion
 figure, 
 subplot(221), hold on, set(gca, 'xcolor', 'none');
 plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfA), ...
@@ -73,9 +73,8 @@ plotJASelected(rad2deg(hipfP), '-r'), plotJASelected(rad2deg(hipfpostC), ...
 legend('Baseline', 'Post C'), legend boxoff
 
 
-
 %% Finding Knee and Hip Angle Peaks
-% Knee
+% Knee Flexion
 [res.knee.Ppeaks, res.knee.Plocs] = findpeaks(rad2deg(-kneeP), ...
     linspace(0, 100, length(kneeP)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
 [res.knee.Apeaks, res.knee.Alocs] = findpeaks(rad2deg(- mean(kneeA, 2) ), ...
@@ -88,7 +87,7 @@ legend('Baseline', 'Post C'), legend boxoff
 [res.knee.postCpeaks, res.knee.postClocs] = findpeaks(rad2deg(-kneepostC), ...
     linspace(0, 100, length(kneepostC)), 'MinPeakDistance', 40, 'MinPeakHeight', 20);
 
-% Hip
+% Hip Flexion
 [res.hip.Ppeaks, res.hip.Plocs] = findpeaks(rad2deg(-hipfP), ...
     linspace(0, 100, length(hipfP)), 'MinPeakHeight', 1.8, 'MinPeakDistance', 55 );
 [res.hip.Apeaks, res.hip.Alocs] = findpeaks(rad2deg(-mean(hipfA, 2)), ...

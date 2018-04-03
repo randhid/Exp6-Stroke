@@ -14,12 +14,19 @@ function [ stats ] = DAOneSubjectStroke( subject , averagesfolder, lap )
 
     %% Anklepositions
     % Active mode
+    if nargin <3
     Assistive_FileList = rdir( [ parentfolder, '\*_training*.txt' ] );
-    for i = 1:length(Assistive_FileList)
-        Ai(i) = readAvgAnklepos( Assistive_FileList(i).name, '', 2 ); %Each Cycle
-        A.x = mean( [ Ai(i).x ] , 2 );
-        A.y = mean( [ Ai(i).y ] , 2 );
+        for i = 1:length(Assistive_FileList)
+            Ai(i) = readAvgAnklepos( Assistive_FileList(i).name, '', 2 ); %Each Cycle
+            A.x = mean( [ Ai(i).x ] , 2 );
+            A.y = mean( [ Ai(i).y ] , 2 );
+        end
+    else
+        A = readAvgAnklepos( parentfolder, ['\*_training', lap, ...
+            '.txt'], 2);
     end
+    
+    
     % Post training A
     [ Posta ] = readAvgAnklepos( parentfolder, '\*posta*.txt', 2 );
 
@@ -41,10 +48,17 @@ function [ stats ] = DAOneSubjectStroke( subject , averagesfolder, lap )
 
     %% Calculating Means and Standard Deviations for Deviation Areas
     %Deviation Areas
-    stats.A = mean( da_A./ref );
-    stats.Posta = mean( da_posta./ref );
-    stats.Postb = mean( da_postb./ref );
-    stats.Postc = mean( da_postc./ref );
-
+    if nargin < 3
+        stats.A = mean( da_A./ref );
+        stats.Posta = mean( da_posta./ref );
+        stats.Postb = mean( da_postb./ref );
+        stats.Postc = mean( da_postc./ref );
+    else
+        stats.A = [ mean( da_A./ref ), std( da_A./ref ) ];
+        stats.Posta = [ mean( da_posta./ref ), std( da_posta./ref ) ];
+        stats.Postb = [ mean( da_postb./ref ), std( da_postb./ref ) ];
+        stats.Postc = [ mean( da_postc./ref ), std( da_postc./ref ) ];
+    end
+    
 end
 
